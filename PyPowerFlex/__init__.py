@@ -60,7 +60,8 @@ class PowerFlexClient:
         'managed_device',
         'deployment',
         'firmware_repository',
-        'host'
+        'host',
+        'credential'
     )
 
     def __init__(self,
@@ -124,6 +125,7 @@ class PowerFlexClient:
             'firmware_repository',
             objects.FirmwareRepository)
         self.__add_storage_entity('host', objects.Host)
+        self.__add_storage_entity('credential', objects.Credential)
         utils.init_logger(self.configuration.log_level)
         if version.parse(self.system.api_version()) < version.Version('3.0'):
             raise exceptions.PowerFlexClientException(

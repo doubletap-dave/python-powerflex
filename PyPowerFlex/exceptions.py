@@ -146,3 +146,38 @@ class PowerFlexFailMigration(PowerFlexClientException):
         self.response = response
         if response:
             self.message = f"{self.message} Error: {response}"
+
+class PowerFlexFailCredentialOperation(PowerFlexClientException):
+    """
+    Exception raised when a credential operation fails.
+    """
+    base = 'Failed to perform {action} on credential {credential_id}.'
+
+    def __init__(self, credential_id, action, response=None):
+        self.message = self.base.format(
+            credential_id=credential_id,
+            action=action
+        )
+        self.response = response
+        if response:
+            self.message = f"{self.message} Error: {response}"
+
+
+class PowerFlexInvalidCredentialType(PowerFlexClientException):
+    """
+    Exception raised when an invalid credential type is provided.
+    """
+    base = 'Invalid credential type: {credential_type}.'
+
+    def __init__(self, credential_type):
+        self.message = self.base.format(credential_type=credential_type)
+
+
+class PowerFlexCredentialNotFound(PowerFlexClientException):
+    """
+    Exception raised when a credential cannot be found.
+    """
+    base = 'Credential with id {credential_id} not found.'
+
+    def __init__(self, credential_id):
+        self.message = self.base.format(credential_id=credential_id)
