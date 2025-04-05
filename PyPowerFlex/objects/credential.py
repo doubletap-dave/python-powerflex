@@ -42,17 +42,34 @@ class Credential(base_client.EntityRequest):
     def __init__(self, token, configuration):
         super().__init__(token, configuration)
         # Version validation is handled by the base client
-        # We'll add Gateway vs Manager validation here once we determine how to check
+        self._validate_gateway_vs_manager()
 
     def _validate_gateway_vs_manager(self):
         """Validate that we're connected to a PowerFlex Manager and not a Gateway.
         
-        :raises: PowerFlexClientException if connected to a Gateway
+        This method attempts to access the credentials endpoint. If a 404 response
+        is received, it indicates we're connected to a Gateway which doesn't support
+        credential operations.
+        
+        :raises: PowerFlexFailCredentialOperation if connected to a Gateway
         """
-        # TODO: Implement Gateway vs Manager validation
-        # This will be implemented once we determine how to check
-        # For now, we'll assume it's a Manager
-        pass
+        try:
+            # Attempt to access credentials endpoint
+            response = self.send_request(self.GET, '/credentials')
+            if response.status_code == 404:
+                LOG.error("Credential operations are not supported on Gateway connections")
+                raise exceptions.PowerFlexFailCredentialOperation(
+                    "Credential operations are not supported on Gateway connections"
+                )
+        except exceptions.PowerFlexClientException as e:
+            # If we get a 404, it means we're on a Gateway
+            if hasattr(e, 'status_code') and e.status_code == 404:
+                LOG.error("Credential operations are not supported on Gateway connections")
+                raise exceptions.PowerFlexFailCredentialOperation(
+                    "Credential operations are not supported on Gateway connections"
+                )
+            # Re-raise other exceptions
+            raise
 
     def _validate_xml_structure(self, xml_data):
         """Validate the XML structure of credential data.
