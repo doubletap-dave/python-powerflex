@@ -365,3 +365,21 @@ class SnapshotPolicyConstants:
         "numOfExpiredButLockedSnapshots",
         "numOfSrcVols",
         "srcVolIds"]
+
+
+class CredentialConstants:
+    """
+    This class holds constants related to Credential management.
+    """
+    # Field validation constants
+    MAX_USERNAME_LENGTH = 128
+    MAX_PASSWORD_LENGTH = 128
+    REQUIRED_FIELDS = {
+        "credentialType": str,
+        "username": str,
+        "password": str
+    }
+    
+    # Retry constants
+    MAX_RETRIES = 3
+    RETRY_DELAY = 1  # seconds

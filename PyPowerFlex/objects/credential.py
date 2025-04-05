@@ -16,8 +16,11 @@
 """This module contains the credential management functionality for PowerFlex."""
 
 import logging
+import time
+from requests.exceptions import Timeout
 from PyPowerFlex import base_client
 from PyPowerFlex import exceptions
+from PyPowerFlex import constants
 
 LOG = logging.getLogger(__name__)
 
@@ -35,18 +38,107 @@ class Credential(base_client.EntityRequest):
     Class for managing PowerFlex credentials.
     """
     entity = "Credential"
-
+    
     def __init__(self, token, configuration):
         super().__init__(token, configuration)
-        self._validate_version()
+        # Version validation is handled by the base client
+        # We'll add Gateway vs Manager validation here once we determine how to check
 
-    def _validate_version(self):
-        """Validate that the PowerFlex version supports credential management."""
-        version = self.get_api_version()
-        if version < "3.0":
+    def _validate_gateway_vs_manager(self):
+        """Validate that we're connected to a PowerFlex Manager and not a Gateway.
+        
+        :raises: PowerFlexClientException if connected to a Gateway
+        """
+        # TODO: Implement Gateway vs Manager validation
+        # This will be implemented once we determine how to check
+        # For now, we'll assume it's a Manager
+        pass
+
+    def _validate_xml_structure(self, xml_data):
+        """Validate the XML structure of credential data.
+        
+        :type xml_data: dict
+        :raises: PowerFlexClientException if XML structure is invalid
+        """
+        if not isinstance(xml_data, dict):
+            raise exceptions.PowerFlexClientException("Invalid XML structure: expected dict")
+        
+        for field, field_type in constants.CredentialConstants.REQUIRED_FIELDS.items():
+            if field not in xml_data:
+                raise exceptions.PowerFlexClientException(f"Missing required field: {field}")
+            if not isinstance(xml_data[field], field_type):
+                raise exceptions.PowerFlexClientException(
+                    f"Invalid type for field {field}: expected {field_type.__name__}"
+                )
+
+    def _validate_field_lengths(self, data):
+        """Validate field lengths in credential data.
+        
+        :type data: dict
+        :raises: PowerFlexClientException if field lengths are invalid
+        """
+        if "username" in data and len(data["username"]) > constants.CredentialConstants.MAX_USERNAME_LENGTH:
             raise exceptions.PowerFlexClientException(
-                "Credential management is not supported in PowerFlex versions below 3.0"
+                f"Username exceeds maximum length of {constants.CredentialConstants.MAX_USERNAME_LENGTH}"
             )
+        if "password" in data and len(data["password"]) > constants.CredentialConstants.MAX_PASSWORD_LENGTH:
+            raise exceptions.PowerFlexClientException(
+                f"Password exceeds maximum length of {constants.CredentialConstants.MAX_PASSWORD_LENGTH}"
+            )
+
+    def _sanitize_input(self, data):
+        """Sanitize input data to prevent XML injection.
+        
+        :type data: dict
+        :rtype: dict
+        """
+        sanitized = {}
+        for key, value in data.items():
+            if isinstance(value, str):
+                # Replace XML special characters
+                sanitized[key] = (value.replace("&", "&amp;")
+                                .replace("<", "&lt;")
+                                .replace(">", "&gt;")
+                                .replace('"', "&quot;")
+                                .replace("'", "&apos;"))
+            else:
+                sanitized[key] = value
+        return sanitized
+
+    def _handle_timeout(self, operation, retry_count=0):
+        """Handle timeout errors with retry logic.
+        
+        :type operation: str
+        :type retry_count: int
+        :raises: PowerFlexClientException if max retries exceeded
+        """
+        if retry_count >= constants.CredentialConstants.MAX_RETRIES:
+            raise exceptions.PowerFlexClientException(
+                f"Operation {operation} timed out after {constants.CredentialConstants.MAX_RETRIES} retries"
+            )
+        
+        LOG.warning(
+            f"Operation {operation} timed out. Retrying in {constants.CredentialConstants.RETRY_DELAY} seconds... "
+            f"(Attempt {retry_count + 1}/{constants.CredentialConstants.MAX_RETRIES})"
+        )
+        time.sleep(constants.CredentialConstants.RETRY_DELAY)
+
+    def _execute_with_retry(self, operation, func, *args, **kwargs):
+        """Execute a function with retry logic for timeout errors.
+        
+        :type operation: str
+        :type func: callable
+        :type args: tuple
+        :type kwargs: dict
+        :rtype: Any
+        """
+        retry_count = 0
+        while True:
+            try:
+                return func(*args, **kwargs)
+            except Timeout:
+                retry_count += 1
+                self._handle_timeout(operation, retry_count)
 
     def get_credential_details(self, credential_id):
         """Get details of a specific credential.
@@ -54,7 +146,11 @@ class Credential(base_client.EntityRequest):
         :type credential_id: str
         :rtype: dict
         """
-        return self.get(entity_id=credential_id)
+        return self._execute_with_retry(
+            "get_credential_details",
+            super().get,
+            entity_id=credential_id
+        )
 
     def list_credentials(self, filter_fields=None, fields=None):
         """Get a list of credentials.
@@ -63,7 +159,12 @@ class Credential(base_client.EntityRequest):
         :type fields: list|tuple
         :rtype: list[dict]
         """
-        return self.get_all(filter_fields=filter_fields, fields=fields)
+        return self._execute_with_retry(
+            "list_credentials",
+            super().get_all,
+            filter_fields=filter_fields,
+            fields=fields
+        )
 
     def add_credential(self, credential_type, username, password, **kwargs):
         """Add a new credential.
@@ -84,7 +185,16 @@ class Credential(base_client.EntityRequest):
             **kwargs
         }
 
-        return self._create_entity(params)
+        # Validate and sanitize input
+        self._validate_xml_structure(params)
+        self._validate_field_lengths(params)
+        params = self._sanitize_input(params)
+
+        return self._execute_with_retry(
+            "add_credential",
+            self._create_entity,
+            params=params
+        )
 
     def update_credential(self, credential_id, **kwargs):
         """Update an existing credential.
@@ -108,7 +218,16 @@ class Credential(base_client.EntityRequest):
             **kwargs
         }
 
-        return self._update_entity(credential_id, params)
+        # Validate and sanitize input
+        self._validate_field_lengths(params)
+        params = self._sanitize_input(params)
+
+        return self._execute_with_retry(
+            "update_credential",
+            self._update_entity,
+            credential_id,
+            params=params
+        )
 
     def delete_credential(self, credential_id):
         """Delete a credential.
@@ -116,4 +235,8 @@ class Credential(base_client.EntityRequest):
         :type credential_id: str
         :rtype: None
         """
-        return self._delete_entity(credential_id)
+        return self._execute_with_retry(
+            "delete_credential",
+            self._delete_entity,
+            credential_id
+        )

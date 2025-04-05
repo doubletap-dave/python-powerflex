@@ -14,13 +14,17 @@ This document outlines the implementation plan for adding credential management 
 - [x] Add credential-related exceptions to `PyPowerFlex/exceptions.py`
 - [x] Update `PyPowerFlex/objects/__init__.py` to export credential classes
 - [x] Update `PyPowerFlex/__init__.py` to expose credential functionality
+- [x] Add credential constants to `PyPowerFlex/constants.py`
 
 ### 1.2 Implement Credential Class
 - [x] Implement base class structure in `objects/credential.py`
   - [x] Inherit from `base_client.EntityRequest`
   - [x] Add class docstring
   - [x] Define credential types as class attributes
+  - [x] Use constants from `constants.py` for all constant values
 - [x] Add version detection and handling
+  - [x] Use existing version validation from base client
+  - [x] Ensure compatibility with both PFM 3.x and 4.x
 - [x] Implement XML payload generation
 - [x] Add credential type validation
 - [x] Implement credential details extraction
@@ -28,6 +32,11 @@ This document outlines the implementation plan for adding credential management 
   - [x] Log errors before raising exceptions
   - [x] Use consistent error message format
   - [x] Avoid logging sensitive data
+- [x] Add Gateway vs Manager validation
+  - [x] Gateway doesn't have credentials endpoint (returns 404)
+  - [x] Implement validation by attempting to access credentials endpoint
+  - [x] Add appropriate error messages for Gateway connections
+  - [x] Handle 404 responses gracefully with clear error messages
 
 ### 1.3 Core Methods Implementation
 - [x] Implement `get_credential_details()`
@@ -59,20 +68,20 @@ This document outlines the implementation plan for adding credential management 
 
 ### 2.1 Input Validation
 - [x] Validate credential types
-- [ ] Validate XML structure
-- [ ] Validate required fields
-- [ ] Add parameter type checking
-- [ ] Implement field length/size validation
-- [ ] Log validation errors before raising exceptions
+- [x] Validate XML structure
+- [x] Validate required fields
+- [x] Add parameter type checking
+- [x] Implement field length/size validation
+- [x] Log validation errors before raising exceptions
 
 ### 2.2 Security Measures
 - [x] Implement secure password handling
-- [ ] Add XML sanitization
-- [ ] Implement proper error messages
+- [x] Add XML sanitization
+- [x] Implement proper error messages
 - [x] Add logging without sensitive data
   - [x] Never log passwords or sensitive fields
   - [x] Use placeholder text for sensitive data in logs
-- [ ] Implement request timeout handling
+- [x] Implement request timeout handling
 
 ### 2.3 Error Handling
 - [x] Add credential-specific exceptions to `exceptions.py`:
@@ -173,6 +182,14 @@ This document outlines the implementation plan for adding credential management 
 
 ## Implementation Notes
 
+### Project Structure Guidelines
+- [x] Always check existing project structure before adding new code
+- [x] Place all constants in `constants.py`
+- [x] Follow existing patterns for class organization
+- [x] Maintain consistent file organization
+- [x] Use appropriate module imports
+- [x] Reuse existing functionality where possible (e.g., version validation)
+
 ### Credential Type Handling
 - [x] Always extract credential type from existing credential
 - [x] Never allow credential type changes
@@ -199,6 +216,15 @@ This document outlines the implementation plan for adding credential management 
 - [x] Handle passwords securely
 - [ ] Sanitize error messages
 - [x] Secure logging practices
+
+### Gateway vs Manager Validation
+- [x] Gateway doesn't have credentials endpoint
+- [x] Attempt to access credentials endpoint to determine connection type
+- [x] Handle 404 responses as indication of Gateway connection
+- [x] Provide clear error messages for Gateway connections
+- [x] Implement graceful fallback for Gateway detection
+- [x] Log connection type determination
+- [x] Cache connection type to avoid repeated checks
 
 ## Dependencies
 - [x] Python 3.x
