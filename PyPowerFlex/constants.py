@@ -365,3 +365,54 @@ class SnapshotPolicyConstants:
         "numOfExpiredButLockedSnapshots",
         "numOfSrcVols",
         "srcVolIds"]
+
+
+class CredentialConstants:
+    """
+    This class holds constants related to Credential Management.
+    """
+    # API Endpoints
+    BASE_CREDENTIAL_URL = '/Api/V1/Credential'
+    
+    # Credential Types Dictionary
+    # The keys are the XML tag names, and the values indicate if domain is supported
+    CREDENTIAL_TYPES = {
+        'serverCredential': False,
+        'iomCredential': False,
+        'vCenterCredential': True,
+        'emCredential': True,
+        'scaleIOCredential': False,
+        'PSCredential': True,
+        'OSCredential': True,
+        'OSUserCredential': True
+    }
+    
+    # For backward compatibility and convenience - individual credential type constants
+    SERVER_CREDENTIAL = 'serverCredential'
+    IOM_CREDENTIAL = 'iomCredential'
+    VCENTER_CREDENTIAL = 'vCenterCredential'
+    EM_CREDENTIAL = 'emCredential'
+    SCALEIO_CREDENTIAL = 'scaleIOCredential'
+    PS_CREDENTIAL = 'PSCredential'
+    OS_CREDENTIAL = 'OSCredential'
+    OS_USER_CREDENTIAL = 'OSUserCredential'
+    
+    # List of all credential types for validation
+    ALL_CREDENTIAL_TYPES = list(CREDENTIAL_TYPES.keys())
+    
+    # Credential types that support domain parameter
+    DOMAIN_SUPPORTED_TYPES = [
+        cred_type for cred_type, supports_domain in CREDENTIAL_TYPES.items() 
+        if supports_domain
+    ]
+    
+    # Content Types
+    XML_CONTENT_TYPE = 'application/xml'
+    JSON_CONTENT_TYPE = 'application/json'
+    
+    # XML Templates
+    CREATE_CREDENTIAL_TEMPLATE = '<?xml version="1.0"?><asmCredential>{credential_content}</asmCredential>'
+    UPDATE_CREDENTIAL_TEMPLATE = '<?xml version="1.0"?><asmCredential>{credential_content}</asmCredential>'
+    
+    # PowerFlex Gateway Version Compatibility
+    MIN_GATEWAY_VERSION_FOR_CREDENTIALS = '4.0'

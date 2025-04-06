@@ -146,3 +146,44 @@ class PowerFlexFailMigration(PowerFlexClientException):
         self.response = response
         if response:
             self.message = f"{self.message} Error: {response}"
+
+
+class PowerFlexCredentialNotSupported(PowerFlexClientException):
+    """
+    Exception raised when credential operations are attempted on unsupported PowerFlex Gateway versions.
+    """
+    def __init__(self, gateway_version=None):
+        self.message = (
+            f'Credential operations are not supported for PowerFlex Gateway version {gateway_version}. '
+            f'PowerFlex Gateway versions below 4.0 do not support credential management operations.'
+        )
+
+
+class PowerFlexCredentialTypeError(PowerFlexClientException):
+    """
+    Exception raised when an invalid credential type is specified.
+    """
+    def __init__(self, credential_type=None):
+        valid_types = [
+            'serverCredential', 'iomCredential', 'vCenterCredential', 
+            'emCredential', 'scaleIOCredential', 'PSCredential', 
+            'OSCredential', 'OSUserCredential'
+        ]
+        
+        self.message = (
+            f'Invalid credential type: {credential_type}. '
+            f'Valid credential types are: {", ".join(valid_types)}'
+        )
+
+
+class PowerFlexFailCredentialOperation(PowerFlexClientException):
+    """
+    Exception raised when performing an operation on a PowerFlex credential fails.
+    """
+    base = 'Failed to perform {action} on credential with id {_id}.'
+
+    def __init__(self, credential_id, action, response=None):
+        self.message = self.base.format(action=action, _id=credential_id)
+        self.response = response
+        if response:
+            self.message = f"{self.message} Error: {response}"
