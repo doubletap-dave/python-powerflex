@@ -19,7 +19,7 @@
 
 import logging
 import xml.etree.ElementTree as ET
-from xml.dom import minidom
+from defusedxml import minidom
 import requests
 
 from PyPowerFlex import base_client
