@@ -28,6 +28,7 @@ setup(
     install_requires=[
         'packaging>=20.4',
         'requests>=2.23.0',
+        'defusedxml>=0.7.1',
     ],
     license_files = ('LICENSE',),
     classifiers=['License :: OSI Approved :: Apache Software License'],
