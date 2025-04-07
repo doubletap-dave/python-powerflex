@@ -130,8 +130,7 @@ class SnapshotPolicy(base_client.EntityRequest):
                                              params=params)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to modify PowerFlex {
-                    self.entity} with id {snapshot_policy_id}. "
+                f"Failed to modify PowerFlex {self.entity} with id {snapshot_policy_id}. "
                 f"Error: {response}"
             )
             LOG.error(msg)

@@ -396,8 +396,7 @@ class Credential(base_client.EntityRequest):
                 except ValueError:
                     error_response = response.text
 
-                msg = f"Failed to create PowerFlex credential. Error: {
-                    error_response}"
+                msg = f"Failed to create PowerFlex credential. Error: {error_response}"
                 LOG.error(msg)
                 raise exceptions.PowerFlexFailCreating(
                     self._entity, error_response)
@@ -517,8 +516,7 @@ class Credential(base_client.EntityRequest):
                 except ValueError:
                     error_response = response.text
 
-                msg = f"Failed to update PowerFlex credential with id {
-                    credential_id}. Error: {error_response}"
+                msg = f"Failed to update PowerFlex credential with id {credential_id}. Error: {error_response}"
                 LOG.error(msg)
                 raise exceptions.PowerFlexFailCredentialOperation(
                     credential_id, "update", error_response)
@@ -561,8 +559,7 @@ class Credential(base_client.EntityRequest):
                 except ValueError:
                     error_response = response.text
 
-                msg = f"Failed to delete PowerFlex credential with id {
-                    credential_id}. Error: {error_response}"
+                msg = f"Failed to delete PowerFlex credential with id {credential_id}. Error: {error_response}"
                 LOG.error(msg)
                 raise exceptions.PowerFlexFailCredentialOperation(
                     credential_id, "delete", error_response)
@@ -621,8 +618,7 @@ class Credential(base_client.EntityRequest):
                 break
 
         if not credential_type:
-            msg = f"Could not determine credential type from response: {
-                credential_data}"
+            msg = f"Could not determine credential type from response: {credential_data}"
             LOG.error(msg)
             raise exceptions.PowerFlexClientException(msg)
 

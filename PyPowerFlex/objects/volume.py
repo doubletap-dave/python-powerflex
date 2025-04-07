@@ -175,8 +175,7 @@ class Volume(base_client.EntityRequest):
                                              params=params)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to extend PowerFlex {
-                    self.entity} with id {volume_id}. "
+                f"Failed to extend PowerFlex {self.entity} with id {volume_id}. "
                 f"Error: {response}"
             )
             LOG.error(msg)

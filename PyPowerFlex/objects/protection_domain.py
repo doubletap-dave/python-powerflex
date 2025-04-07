@@ -196,8 +196,7 @@ class ProtectionDomain(base_client.EntityRequest):
 
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to update the network limits of PowerFlex {
-                    self.entity} "
+                f"Failed to update the network limits of PowerFlex {self.entity} "
                 f"with id {protection_domain_id}. Error: {response}"
             )
             LOG.error(msg)

@@ -249,8 +249,7 @@ class System(base_client.EntityRequest):
                                              entity=self.entity)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to get MDM cluster details on PowerFlex {
-                    self.entity}. "
+                f"Failed to get MDM cluster details on PowerFlex {self.entity}. "
                 f"Error: {response}"
             )
             LOG.error(msg)
