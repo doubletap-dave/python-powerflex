@@ -30,6 +30,7 @@ LOG = logging.getLogger(__name__)
 
 class PowerFlexUtility(base_client.EntityRequest):
     "Utility class for PowerFlex"
+
     def __init__(self, token, configuration):
         super().__init__(token, configuration)
 

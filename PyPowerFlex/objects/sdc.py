@@ -26,6 +26,7 @@ class Sdc(base_client.EntityRequest):
     """
     A class representing SDC client.
     """
+
     def delete(self, sdc_id):
         """Remove PowerFlex SDC.
 

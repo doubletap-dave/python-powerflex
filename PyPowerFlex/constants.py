@@ -17,6 +17,7 @@
 
 # pylint: disable=too-few-public-methods
 
+
 class StoragePoolConstants:
     """
     This class holds constants related to StoragePool.

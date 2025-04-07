@@ -29,6 +29,7 @@ class ManagedDevice(base_client.EntityRequest):
     """
     A class representing Managed Device client.
     """
+
     def get(self, filters=None, limit=None, offset=None, sort=None):
         """
         Retrieve all devices from inventory with filter, sort, pagination

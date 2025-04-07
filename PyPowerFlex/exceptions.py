@@ -17,10 +17,12 @@
 
 # pylint: disable=super-init-not-called
 
+
 class PowerFlexClientException(Exception):
     """
     Base class for all exceptions raised by the PowerFlexClient.
     """
+
     def __init__(self, message, response=None):
         self.message = message
         self.response = response
@@ -33,6 +35,7 @@ class ClientNotInitialized(PowerFlexClientException):
     """
     Exception raised when the PowerFlexClient is not initialized.
     """
+
     def __init__(self):
         self.message = (
             'PowerFlex Client is not initialized. '
@@ -118,6 +121,7 @@ class PowerFlexFailRenaming(PowerFlexClientException):
         if response:
             self.message = f"{self.message} Error: {response}"
 
+
 class PowerFlexFailEntityOperation(PowerFlexClientException):
     """
     Exception raised when performing an operation on a PowerFlex entity fails.
@@ -130,6 +134,7 @@ class PowerFlexFailEntityOperation(PowerFlexClientException):
         self.response = response
         if response:
             self.message = f"{self.message} Error: {response}"
+
 
 class PowerFlexFailMigration(PowerFlexClientException):
     """
@@ -170,13 +175,14 @@ class PowerFlexCredentialTypeError(PowerFlexClientException):
     """
     Exception raised when an invalid credential type is specified.
     """
+
     def __init__(self, credential_type=None):
         valid_types = [
-            'serverCredential', 'iomCredential', 'vCenterCredential', 
-            'emCredential', 'scaleIOCredential', 'PSCredential', 
+            'serverCredential', 'iomCredential', 'vCenterCredential',
+            'emCredential', 'scaleIOCredential', 'PSCredential',
             'OSCredential', 'OSUserCredential'
         ]
-        
+
         self.message = (
             f'Invalid credential type: {credential_type}. '
             f'Valid credential types are: {", ".join(valid_types)}'

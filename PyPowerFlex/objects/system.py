@@ -56,6 +56,7 @@ class SnapshotDef(dict):
 
 class System(base_client.EntityRequest):
     """Client for system operations"""
+
     def __init__(self, token, configuration):
         self.__api_version = None
         super().__init__(token, configuration)
@@ -205,7 +206,7 @@ class System(base_client.EntityRequest):
                                              params=params)
         if r.status_code != requests.codes.ok:
             msg = f"Failed to add standBy MDM on PowerFlex {self.entity}. " \
-                  f"Error: {response}"
+                f"Error: {response}"
             LOG.error(msg)
             raise exceptions.PowerFlexClientException(msg)
 
@@ -248,7 +249,8 @@ class System(base_client.EntityRequest):
                                              entity=self.entity)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to get MDM cluster details on PowerFlex {self.entity}. "
+                f"Failed to get MDM cluster details on PowerFlex {
+                    self.entity}. "
                 f"Error: {response}"
             )
             LOG.error(msg)
@@ -266,7 +268,8 @@ class System(base_client.EntityRequest):
         r, response = self.send_get_request('/Configuration')
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to get gateway configuration details on PowerFlex {self.entity}. "
+                f"Failed to get gateway configuration details on PowerFlex {
+                    self.entity}. "
                 f"Error: {response}"
             )
             LOG.error(msg)
@@ -439,7 +442,7 @@ class System(base_client.EntityRequest):
                                                          params=params)
         if r.status_code != requests.codes.ok and response is not None:
             msg = f"Failed to switch MDM cluster mode PowerFlex {self.entity}. " \
-                  f"Error: {response}."
+                f"Error: {response}."
             LOG.error(msg)
             raise exceptions.PowerFlexClientException(msg)
 

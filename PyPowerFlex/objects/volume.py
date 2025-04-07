@@ -59,6 +59,7 @@ class Volume(base_client.EntityRequest):
     """
     A class representing Volume client.
     """
+
     def add_mapped_sdc(self,
                        volume_id,
                        sdc_id=None,
@@ -164,7 +165,8 @@ class Volume(base_client.EntityRequest):
 
         action = 'setVolumeSize'
 
-        params = {"sizeInGB": size_in_gb, "allowOnExtManagedVol": allow_ext_managed}
+        params = {"sizeInGB": size_in_gb,
+                  "allowOnExtManagedVol": allow_ext_managed}
 
         r, response = self.send_post_request(self.base_action_url,
                                              action=action,
@@ -173,7 +175,8 @@ class Volume(base_client.EntityRequest):
                                              params=params)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to extend PowerFlex {self.entity} with id {volume_id}. "
+                f"Failed to extend PowerFlex {
+                    self.entity} with id {volume_id}. "
                 f"Error: {response}"
             )
             LOG.error(msg)
@@ -259,7 +262,8 @@ class Volume(base_client.EntityRequest):
                                              params=params)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to unmap PowerFlex {self.entity} with id {volume_id} from "
+                f"Failed to unmap PowerFlex {
+                    self.entity} with id {volume_id} from "
                 f"SDC. Error: {response}"
             )
             LOG.error(msg)
@@ -452,7 +456,8 @@ class Volume(base_client.EntityRequest):
         if r.status_code != requests.codes.ok:
             msg = (
                 f"Failed to set the access mode for the SDC {sdc_id} "
-                f"mapped to PowerFlex {self.entity} with id {volume_id}. Error: "
+                f"mapped to PowerFlex {self.entity} with id {
+                    volume_id}. Error: "
                 f"{response}"
             )
             LOG.error(msg)
@@ -485,7 +490,8 @@ class Volume(base_client.EntityRequest):
                                              params=params)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to set the retention period for PowerFlex {self.entity} "
+                f"Failed to set the retention period for PowerFlex {
+                    self.entity} "
                 f"with id {snap_id}. Error: {response}"
             )
             LOG.error(msg)
@@ -625,7 +631,8 @@ class Volume(base_client.EntityRequest):
 
         if r.status_code != requests.codes.ok:
             msg = (
-                f'Failed to migrate PowerFlex {self.entity} with id {volume_id} '
+                f'Failed to migrate PowerFlex {
+                    self.entity} with id {volume_id} '
                 f'to storage pool {dest_sp_id}. Error: {response}'
             )
             LOG.error(msg)

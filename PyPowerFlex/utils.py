@@ -22,6 +22,7 @@ import sys
 
 from PyPowerFlex import exceptions
 
+
 def init_logger(log_level):
     """Initialize logger for PowerFlex client.
 

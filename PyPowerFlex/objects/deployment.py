@@ -29,6 +29,7 @@ class Deployment(base_client.EntityRequest):
     """
     A class representing Deployment client.
     """
+
     def get(
             self,
             filters=None,

@@ -15,10 +15,12 @@
 
 """This module is used for the management of token."""
 
+
 class Token:
     """
     A class to manage a token.
     """
+
     def __init__(self):
         """
         Initialize the Token object.

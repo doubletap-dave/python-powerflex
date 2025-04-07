@@ -32,6 +32,7 @@ class FaultSet(base_client.EntityRequest):
     """
     A class representing Fault Set client.
     """
+
     def clear(self, fault_set_id):
         """Clear PowerFlex fault set.
 

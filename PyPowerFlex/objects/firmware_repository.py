@@ -29,6 +29,7 @@ class FirmwareRepository(base_client.EntityRequest):
     """
     A class representing Firmware Repository client.
     """
+
     def get(self, filters=None, limit=None, offset=None, sort=None,
             related=False, bundles=False, components=False):
         """

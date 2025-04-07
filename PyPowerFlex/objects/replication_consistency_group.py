@@ -33,6 +33,7 @@ class ReplicationConsistencyGroup(base_client.EntityRequest):
     """
     A class representing Replication Consistency Group client.
     """
+
     def create_snapshot(self,
                         rcg_id):
         """Create a snapshot of PowerFlex replication consistency group.
