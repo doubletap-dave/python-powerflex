@@ -26,6 +26,7 @@ from PyPowerFlex import base_client
 from PyPowerFlex import exceptions
 from PyPowerFlex import utils
 from PyPowerFlex.constants import CredentialConstants
+from PyPowerFlex.objects import system
 
 LOG = logging.getLogger(__name__)
 
@@ -153,8 +154,8 @@ class BaseCredential:
         # Create the credential object
         if domain_supported and domain:
             return credential_class(label, username, password, domain)
-        else:
-            return credential_class(label, username, password)
+        
+        return credential_class(label, username, password)
 
 
 class ServerCredential(BaseCredential):
@@ -446,6 +447,7 @@ class Credential(base_client.EntityRequest):
 
         return response
 
+    # pylint: disable=too-many-locals
     def update(self, credential_id, credential):
         """Update PowerFlex credential.
 
@@ -546,7 +548,11 @@ class Credential(base_client.EntityRequest):
         version = self.login()
 
         try:
-            response = requests.delete(request_url, headers=headers)
+            response = requests.delete(
+                request_url, 
+                headers=headers,
+                timeout=30  # Add a reasonable timeout
+            )
             self.logout(version)
 
             if response.status_code != requests.codes.ok:
@@ -579,15 +585,16 @@ class Credential(base_client.EntityRequest):
                 version = self.client.system.api_version()
             else:
                 # Fallback to creating a new System instance if client is not available
-                from PyPowerFlex.objects import system
                 sys_client = system.System(self.token, self.configuration)
                 version = sys_client.api_version()
 
             # Check if version is high enough to support credentials (4.0 or higher)
             major_version = version.split('.')[0]
             if int(major_version) < 4:
-                msg = f"Credential management requires PowerFlex Gateway version 4.0 or higher. Current version: {
-                    version}"
+                msg = (
+                    f"Credential management requires PowerFlex Gateway version 4.0 or higher. "
+                    f"Current version: {version}"
+                )
                 LOG.error(msg)
                 raise exceptions.PowerFlexCredentialNotSupported(version)
         except Exception as e:
@@ -622,8 +629,9 @@ class Credential(base_client.EntityRequest):
         return credential_type
 
     def verify_credential(self, credential):
-        """Verify if a credential object is valid by attempting to create a temporary XML representation.
-        This doesn't make an API call but validates that the credential can be serialized properly.
+        """Verify if a credential object is valid by attempting to create a temporary XML 
+        representation. This doesn't make an API call but validates that the credential can be 
+        serialized properly.
 
         :param credential: The credential object to verify
         :type credential: BaseCredential
@@ -647,8 +655,10 @@ class Credential(base_client.EntityRequest):
         # Check domain parameter if present
         if (hasattr(credential, 'domain') and credential.domain and
                 credential.credential_type not in CredentialConstants.DOMAIN_SUPPORTED_TYPES):
-            LOG.warning(f"Domain parameter provided for {
-                        credential.credential_type} which doesn't support domains")
+            LOG.warning(
+                "Domain parameter provided for %s which doesn't support domains",
+                credential.credential_type
+            )
 
         # Try to create XML representation
         try:
