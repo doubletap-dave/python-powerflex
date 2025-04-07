@@ -15,7 +15,7 @@
 
 """Module for interacting with snapshot policy APIs."""
 
-# pylint: disable=too-few-public-methods,no-member,too-many-arguments,too-many-positional-arguments,duplicate-code
+# pylint: disable=invalid-name,too-many-arguments
 
 import logging
 
@@ -130,8 +130,7 @@ class SnapshotPolicy(base_client.EntityRequest):
                                              params=params)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to modify PowerFlex {
-                    self.entity} with id {snapshot_policy_id}. "
+                f"Failed to modify PowerFlex {self.entity} with id {snapshot_policy_id}. "
                 f"Error: {response}"
             )
             LOG.error(msg)
@@ -154,8 +153,7 @@ class SnapshotPolicy(base_client.EntityRequest):
                                              entity_id=snapshot_policy_id)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to pause PowerFlex {
-                    self.entity} with id {snapshot_policy_id}. "
+                f"Failed to pause PowerFlex {self.entity} with id {snapshot_policy_id}. "
                 f"Error: {response}"
             )
             LOG.error(msg)
@@ -234,8 +232,7 @@ class SnapshotPolicy(base_client.EntityRequest):
                                              entity_id=snapshot_policy_id)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to resume PowerFlex {
-                    self.entity} with id {snapshot_policy_id}. "
+                f"Failed to resume PowerFlex {self.entity} with id {snapshot_policy_id}. "
                 f"Error: {response}"
             )
             LOG.error(msg)

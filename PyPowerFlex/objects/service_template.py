@@ -15,7 +15,7 @@
 
 """Module for interacting with service template APIs."""
 
-# pylint: disable=arguments-renamed,no-member,too-many-arguments,too-many-positional-arguments
+# pylint: disable=invalid-name,too-many-arguments
 
 import logging
 import requests
@@ -78,8 +78,7 @@ class ServiceTemplate(base_client.EntityRequest):
         r, response = self.send_get_request(url)
         if r.status_code != requests.codes.ok:
             msg = (
-                f'Failed to retrieve service template by id {
-                    service_template_id}. '
+                f'Failed to retrieve service template by id {service_template_id}. '
                 f'Error: {response}'
             )
             LOG.error(msg)

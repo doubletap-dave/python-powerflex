@@ -15,7 +15,7 @@
 
 """This module is used for the initialization of PowerFlex Client."""
 
-# pylint: disable=invalid-name,too-many-arguments,too-many-positional-arguments
+# pylint: disable=invalid-name,too-many-arguments
 
 from packaging import version
 

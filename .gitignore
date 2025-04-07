@@ -2,12 +2,8 @@
 __pycache__
 
 # pytest coverage
+*.egg-info
 .coverage
 htmlcov
-
-.venv
-ref
-
-*.egg-info
 
 

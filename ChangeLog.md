@@ -1,5 +1,40 @@
 # PyPowerFlex Change Log
 
+## [UNVERSIONED] - committed 2025-04-07
+
+### Added
+- Added new credentials module for secure credential management and authentication
+- Added comprehensive test coverage for volume migration operations
+- Added new test cases for error handling in replication consistency groups
+- Added test coverage for utility functions and statistics gathering
+- Added test cases for concurrent access and insufficient space scenarios
+
+### Changed
+- Modified test execution in tox.ini to use unittest directly instead of stestr for better compatibility
+- Updated codecov environment to use unittest discover for test execution
+- Improved test coverage reporting configuration
+- Enhanced error handling for volume operations with specific error messages
+- Updated test framework to better handle mock responses and error scenarios
+
+### Fixed
+- Resolved issues with test execution by replacing problematic stestr commands
+- Fixed test discovery and execution in the codecov environment
+- Fixed error handling for concurrent operations in volume migration
+- Fixed statistics gathering for storage pools and volumes
+- Fixed test coverage reporting for utility functions
+
+### Improved
+- Enhanced test coverage across multiple modules (now at 89% overall)
+- Improved error message clarity for various PowerFlex operations
+- Better handling of API version compatibility
+- More robust test framework with better mock response handling
+
+### Removed
+- Removed deprecated test cases and functionality
+
+### Deprecated
+- Deprecated test cases and functionality
+
 ## Version 1.14.0 - released on 05/12/24
 - Added support for managing NVME over TCP entities including SDT and NVMe Host.
 

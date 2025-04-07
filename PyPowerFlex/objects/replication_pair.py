@@ -15,7 +15,7 @@
 
 """Module for interacting with replication pair APIs."""
 
-# pylint: disable=redefined-builtin,no-member,too-many-arguments,too-many-positional-arguments,duplicate-code
+# pylint: disable=redefined-builtin,no-member,too-many-arguments,duplicate-code,invalid-name
 
 import logging
 

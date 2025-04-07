@@ -1,3 +1,136 @@
 [MASTER]
+# Add files or directories to the blacklist
+ignore=CVS
+ignore-patterns=
+
+# Use multiple processes to speed up Pylint (use "0" for auto)
+jobs=0
+
+[MESSAGES CONTROL]
+# Disable specific warnings
+disable=
+    # Disable no-member for LookupDict instances as they are dynamic
+    no-member,
+    # Disable too-few-public-methods for enum-like classes
+    too-few-public-methods,
+    # Disable arguments-renamed for method overrides
+    arguments-renamed,
+    # Disable protected-access for test files
+    protected-access,
+    # Disable invalid-name for test files
+    invalid-name,
+    # Disable duplicate-code as these are API-related duplications
+    duplicate-code,
+    # Disable too-many-public-methods for API client classes
+    too-many-public-methods,
+    # Disable too-many-locals for complex API methods
+    too-many-locals,
+    # Disable too-many-positional-arguments for API methods
+    too-many-positional-arguments
+
 [FORMAT]
-disable=trailing-whitespace,undefined-variable
+# Maximum number of characters on a single line
+max-line-length=120
+
+# Maximum number of lines in a module
+max-module-lines=2000
+
+# String used as indentation unit (2 spaces or 1 tab)
+indent-string='    '
+
+[BASIC]
+# Regular expression which should only match function or class names
+function-rgx=[a-z_][a-z0-9_]{2,50}$
+class-rgx=[A-Z_][a-zA-Z0-9_]+$
+
+# Regular expression which should only match correct variable names
+variable-rgx=[a-z_][a-z0-9_]{2,50}$
+
+# Good variable names which should always be accepted
+good-names=i,j,k,ex,Run,_,id,f,x,y
+
+[SIMILARITIES]
+# Minimum lines number of a similarity
+min-similarity-lines=4
+
+# Ignore imports when computing similarities
+ignore-imports=yes
+
+[TYPECHECK]
+# List of module names for which member attributes should not be checked
+ignored-modules=numpy,tensorflow,torch,cv2
+
+# List of classes names for which member attributes should not be checked
+ignored-classes=LookupDict,SQLObject,SQLAlchemy
+
+[MISCELLANEOUS]
+# List of note tags to take into consideration
+notes=FIXME,XXX,TODO
+
+[VARIABLES]
+# Tells whether we should check for unused import in __init__ files
+init-import=no
+
+# A regular expression matching the name of dummy variables
+dummy-variables-rgx=_$|dummy
+
+# List of additional names to consider as builtins
+additional-builtins=
+
+# List of strings which can identify a callback function by name
+callbacks=cb_,_cb
+
+[DESIGN]
+# Maximum number of arguments for function / method
+max-args=10
+
+# Maximum number of locals for function / method body
+max-locals=20
+
+# Maximum number of return / yield for function / method body
+max-returns=11
+
+# Maximum number of branch for function / method body
+max-branches=26
+
+# Maximum number of statements in function / method body
+max-statements=100
+
+# Maximum number of parents for a class (see R0901)
+max-parents=7
+
+# Maximum number of attributes for a class (see R0902)
+max-attributes=12
+
+# Minimum number of public methods for a class (see R0903)
+min-public-methods=2
+
+# Maximum number of public methods for a class (see R0904)
+max-public-methods=30
+
+[IMPORTS]
+# Deprecated modules which should not be used, separated by a comma
+deprecated-modules=regsub,TERMIOS,Bastion,rexec
+
+# Create a graph of external dependencies in the given file (report R0001)
+ext-import-graph=
+
+# Create a graph of every (i.e. internal and external) dependencies in the given file (report R0002)
+import-graph=
+
+# Create a graph of internal dependencies in the given file (report R0003)
+int-import-graph=
+
+[CLASSES]
+# List of method names used to declare (i.e. assign) instance attributes
+defining-attr-methods=__init__,__new__,setUp
+
+# List of valid names for the first argument in a class method
+valid-classmethod-first-arg=cls
+
+# List of valid names for the first argument in a static method
+valid-metaclass-classmethod-first-arg=cls
+
+[EXCEPTIONS]
+# Exceptions that will emit a warning when caught
+overgeneral-exceptions=builtins.Exception

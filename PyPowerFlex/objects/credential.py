@@ -74,10 +74,10 @@ class BaseCredential:
         password_elem = ET.SubElement(credential_elem, "password")
         password_elem.text = self.password
 
-        # Add domain if supported and provided
-        if self.domain and self.credential_type in CredentialConstants.DOMAIN_SUPPORTED_TYPES:
+        # Add domain if credential type supports it
+        if self.credential_type in CredentialConstants.DOMAIN_SUPPORTED_TYPES:
             domain_elem = ET.SubElement(credential_elem, "domain")
-            domain_elem.text = self.domain
+            domain_elem.text = self.domain if self.domain is not None else ""
 
         return credential_elem
 
@@ -154,7 +154,7 @@ class BaseCredential:
         # Create the credential object
         if domain_supported and domain:
             return credential_class(label, username, password, domain)
-        
+
         return credential_class(label, username, password)
 
 
@@ -396,8 +396,7 @@ class Credential(base_client.EntityRequest):
                 except ValueError:
                     error_response = response.text
 
-                msg = f"Failed to create PowerFlex credential. Error: {
-                    error_response}"
+                msg = f"Failed to create PowerFlex credential. Error: {error_response}"
                 LOG.error(msg)
                 raise exceptions.PowerFlexFailCreating(
                     self._entity, error_response)
@@ -517,8 +516,7 @@ class Credential(base_client.EntityRequest):
                 except ValueError:
                     error_response = response.text
 
-                msg = f"Failed to update PowerFlex credential with id {
-                    credential_id}. Error: {error_response}"
+                msg = f"Failed to update PowerFlex credential with id {credential_id}. Error: {error_response}"
                 LOG.error(msg)
                 raise exceptions.PowerFlexFailCredentialOperation(
                     credential_id, "update", error_response)
@@ -549,7 +547,7 @@ class Credential(base_client.EntityRequest):
 
         try:
             response = requests.delete(
-                request_url, 
+                request_url,
                 headers=headers,
                 timeout=30  # Add a reasonable timeout
             )
@@ -561,8 +559,7 @@ class Credential(base_client.EntityRequest):
                 except ValueError:
                     error_response = response.text
 
-                msg = f"Failed to delete PowerFlex credential with id {
-                    credential_id}. Error: {error_response}"
+                msg = f"Failed to delete PowerFlex credential with id {credential_id}. Error: {error_response}"
                 LOG.error(msg)
                 raise exceptions.PowerFlexFailCredentialOperation(
                     credential_id, "delete", error_response)
@@ -621,8 +618,7 @@ class Credential(base_client.EntityRequest):
                 break
 
         if not credential_type:
-            msg = f"Could not determine credential type from response: {
-                credential_data}"
+            msg = f"Could not determine credential type from response: {credential_data}"
             LOG.error(msg)
             raise exceptions.PowerFlexClientException(msg)
 

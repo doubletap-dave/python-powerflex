@@ -15,7 +15,7 @@
 
 """This module is used for the configuration of the client."""
 
-# pylint: disable=too-many-instance-attributes,too-many-arguments,too-many-positional-arguments,too-few-public-methods
+# pylint: disable=invalid-name,too-many-arguments
 
 from PyPowerFlex import exceptions
 
@@ -25,6 +25,7 @@ class Configuration:
     Configuration class for the PyPowerFlex library.
     """
 
+    # pylint: disable=too-many-instance-attributes
     def __init__(self,
                  gateway_address=None,
                  gateway_port=443,
@@ -64,3 +65,19 @@ class Configuration:
                 'The following parameters must be set: '
                 'gateway_address, gateway_port, username, password.'
             )
+
+    def get_connection_info(self):
+        """
+        Returns the connection information for the PowerFlex gateway.
+
+        :return: A dictionary containing connection information
+        :rtype: dict
+        """
+        return {
+            'address': self.gateway_address,
+            'port': self.gateway_port,
+            'username': self.username,
+            'verify_certificate': self.verify_certificate,
+            'certificate_path': self.certificate_path,
+            'timeout': self.timeout
+        }

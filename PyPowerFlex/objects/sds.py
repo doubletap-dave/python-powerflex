@@ -15,7 +15,7 @@
 
 """Module for interacting with SDS APIs."""
 
-# pylint: disable=too-few-public-methods,no-member,too-many-arguments,too-many-positional-arguments,too-many-locals,duplicate-code
+# pylint: disable=invalid-name,too-many-arguments
 
 import logging
 
@@ -374,8 +374,7 @@ class Sds(base_client.EntityRequest):
                                              entity_id=sds_id)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to enable/disable Rfcache for PowerFlex {
-                    self.entity} "
+                f"Failed to enable/disable Rfcache for PowerFlex {self.entity} "
                 f"with id {sds_id}. Error: {response}"
             )
             LOG.error(msg)
@@ -404,8 +403,7 @@ class Sds(base_client.EntityRequest):
                                              params=params)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to enable/disable Rmcache for PowerFlex {
-                    self.entity} "
+                f"Failed to enable/disable Rmcache for PowerFlex {self.entity} "
                 f"with id {sds_id}. Error: {response}"
             )
             LOG.error(msg)
