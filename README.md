@@ -47,7 +47,7 @@ python setup.py install
 * Deployment
 * ServiceTemplate
 * FirmwareRepository
-* Credential (requires PowerFlex Gateway 4.0+)
+* Credential (requires PowerFlex Manager 4.0+)
 
 #### Initialize PowerFlex client
 
@@ -225,7 +225,7 @@ client.volume.get(filter_fields={'id': '4a3a153e00000000'},
 [{'name': 'sio-new_thin_vol', 'id': '4a3a153e00000000'}]
 ```
 
-#### Credential Management (4.0+ Gateway)
+#### Credential Management (4.0+ PowerFlex Manager)
 
 PowerFlex 4.0 and later provides credential management capabilities through the PyPowerFlex SDK. This feature allows you to manage credentials for various components in your PowerFlex environment.
 
