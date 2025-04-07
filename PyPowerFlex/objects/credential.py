@@ -74,10 +74,10 @@ class BaseCredential:
         password_elem = ET.SubElement(credential_elem, "password")
         password_elem.text = self.password
 
-        # Add domain if supported and provided
-        if self.domain and self.credential_type in CredentialConstants.DOMAIN_SUPPORTED_TYPES:
+        # Add domain if credential type supports it
+        if self.credential_type in CredentialConstants.DOMAIN_SUPPORTED_TYPES:
             domain_elem = ET.SubElement(credential_elem, "domain")
-            domain_elem.text = self.domain
+            domain_elem.text = self.domain if self.domain is not None else ""
 
         return credential_elem
 
@@ -154,7 +154,7 @@ class BaseCredential:
         # Create the credential object
         if domain_supported and domain:
             return credential_class(label, username, password, domain)
-        
+
         return credential_class(label, username, password)
 
 
@@ -549,7 +549,7 @@ class Credential(base_client.EntityRequest):
 
         try:
             response = requests.delete(
-                request_url, 
+                request_url,
                 headers=headers,
                 timeout=30  # Add a reasonable timeout
             )
