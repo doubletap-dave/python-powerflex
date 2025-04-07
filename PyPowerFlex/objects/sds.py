@@ -145,6 +145,7 @@ class Sds(base_client.EntityRequest):
     """
     A class representing SDS client.
     """
+
     def add_ip(self, sds_id, sds_ip):
         """Add PowerFlex SDS IP-address.
 
@@ -288,7 +289,7 @@ class Sds(base_client.EntityRequest):
                                              params=params)
         if r.status_code != requests.codes.ok:
             msg = f"Failed to remove IP from PowerFlex {self.entity} " \
-                  f"with id {sds_id}. Error: {response}"
+                f"with id {sds_id}. Error: {response}"
             LOG.error(msg)
             raise exceptions.PowerFlexClientException(msg)
 
@@ -349,7 +350,7 @@ class Sds(base_client.EntityRequest):
                                              params=params)
         if r.status_code != requests.codes.ok:
             msg = f"Failed to set port for PowerFlex {self.entity} " \
-                  f"with id {sds_id}. Error: {response}"
+                f"with id {sds_id}. Error: {response}"
             LOG.error(msg)
             raise exceptions.PowerFlexClientException(msg)
 
@@ -373,7 +374,8 @@ class Sds(base_client.EntityRequest):
                                              entity_id=sds_id)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to enable/disable Rfcache for PowerFlex {self.entity} "
+                f"Failed to enable/disable Rfcache for PowerFlex {
+                    self.entity} "
                 f"with id {sds_id}. Error: {response}"
             )
             LOG.error(msg)
@@ -402,7 +404,8 @@ class Sds(base_client.EntityRequest):
                                              params=params)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to enable/disable Rmcache for PowerFlex {self.entity} "
+                f"Failed to enable/disable Rmcache for PowerFlex {
+                    self.entity} "
                 f"with id {sds_id}. Error: {response}"
             )
             LOG.error(msg)

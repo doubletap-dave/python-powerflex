@@ -50,6 +50,7 @@ class Device(base_client.EntityRequest):
     """
     A class representing Device client.
     """
+
     def create(self,
                current_pathname,
                sds_id,

@@ -32,6 +32,7 @@ class ReplicationPair(base_client.EntityRequest):
     """
     A class representing Replication Pair client.
     """
+
     def get_statistics(self, id):
         """Retrieve statistics for the specified ReplicationPair object.
 

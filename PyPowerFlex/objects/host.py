@@ -21,10 +21,12 @@ from PyPowerFlex import base_client
 
 LOG = logging.getLogger(__name__)
 
+
 class Host(base_client.EntityRequest):
     """
     A class representing Host client.
     """
+
     def create(self,
                nqn,
                name=None,

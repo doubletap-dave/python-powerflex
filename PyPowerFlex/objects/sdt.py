@@ -56,6 +56,7 @@ class Sdt(base_client.EntityRequest):
     """
     A class representing SDT client.
     """
+
     def create(
         self,
         sdt_ips,
@@ -155,7 +156,7 @@ class Sdt(base_client.EntityRequest):
         )
         if r.status_code != requests.codes.ok:
             msg = f"Failed to remove IP from PowerFlex {self.entity} " \
-                  f"with id {sdt_id}. Error: {response}"
+                f"with id {sdt_id}. Error: {response}"
             LOG.error(msg)
             raise exceptions.PowerFlexClientException(msg)
 
@@ -187,7 +188,7 @@ class Sdt(base_client.EntityRequest):
         )
         if r.status_code != requests.codes.ok:
             msg = f"Failed to set ip role for PowerFlex {self.entity} " \
-                  f"with id {sdt_id}. Error: {response}"
+                f"with id {sdt_id}. Error: {response}"
             LOG.error(msg)
             raise exceptions.PowerFlexClientException(msg)
 
@@ -298,7 +299,8 @@ class Sdt(base_client.EntityRequest):
         )
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to enter maintenance mode for PowerFlex {self.entity} "
+                f"Failed to enter maintenance mode for PowerFlex {
+                    self.entity} "
                 f"with id {sdt_id}. Error: {response}"
             )
             LOG.error(msg)

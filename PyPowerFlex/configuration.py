@@ -19,10 +19,12 @@
 
 from PyPowerFlex import exceptions
 
+
 class Configuration:
     """
     Configuration class for the PyPowerFlex library.
     """
+
     def __init__(self,
                  gateway_address=None,
                  gateway_port=443,

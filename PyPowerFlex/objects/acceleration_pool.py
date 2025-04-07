@@ -38,6 +38,7 @@ class AccelerationPool(base_client.EntityRequest):
 
     This class provides methods to create, delete, and query acceleration pools.
     """
+
     def create(self,
                media_type,
                protection_domain_id,
