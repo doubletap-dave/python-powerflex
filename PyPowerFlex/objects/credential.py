@@ -291,6 +291,11 @@ class Credential(base_client.EntityRequest):
     A class representing Credential client for PowerFlex credential management.
     """
     
+    @property
+    def entity_name(self):
+        """Return the entity name for this object."""
+        return 'Credential'
+    
     def __init__(self, token, configuration):
         """Initialize a Credential client.
         
@@ -300,7 +305,7 @@ class Credential(base_client.EntityRequest):
         :type configuration: Configuration
         """
         super().__init__(token, configuration)
-        self.entity = 'Credential'
+        self._entity = 'Credential'
         self.base_url = f"{self.base_url}/Api/V1"
         
     def create(self, credential):
@@ -370,7 +375,7 @@ class Credential(base_client.EntityRequest):
                     
                 msg = f"Failed to create PowerFlex credential. Error: {error_response}"
                 LOG.error(msg)
-                raise exceptions.PowerFlexFailCreating(self.entity, error_response)
+                raise exceptions.PowerFlexFailCreating(self._entity, error_response)
                 
             return response.json()
         except requests.exceptions.RequestException as e:
