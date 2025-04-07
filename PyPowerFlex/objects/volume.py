@@ -487,8 +487,7 @@ class Volume(base_client.EntityRequest):
                                              params=params)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to set the retention period for PowerFlex {
-                    self.entity} "
+                f"Failed to set the retention period for PowerFlex {self.entity} "
                 f"with id {snap_id}. Error: {response}"
             )
             LOG.error(msg)
@@ -628,8 +627,7 @@ class Volume(base_client.EntityRequest):
 
         if r.status_code != requests.codes.ok:
             msg = (
-                f'Failed to migrate PowerFlex {
-                    self.entity} with id {volume_id} '
+                f'Failed to migrate PowerFlex {self.entity} with id {volume_id} '
                 f'to storage pool {dest_sp_id}. Error: {response}'
             )
             LOG.error(msg)

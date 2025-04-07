@@ -362,11 +362,11 @@ class StoragePool(base_client.EntityRequest):
             "rebalanceEnabled": rebalance_enabled
         }
 
-        r, _ = self.send_post_request(self.base_action_url,
-                                      action=action,
-                                      entity=self.entity,
-                                      entity_id=storage_pool_id,
-                                      params=params)
+        r, response = self.send_post_request(self.base_action_url,
+                                             action=action,
+                                             entity=self.entity,
+                                             entity_id=storage_pool_id,
+                                             params=params)
         if r.status_code != requests.codes.ok:
             msg = (
                 f'Failed to enable/disable rebalance for PowerFlex {self.entity} '
