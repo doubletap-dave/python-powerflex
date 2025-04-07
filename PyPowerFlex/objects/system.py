@@ -15,7 +15,7 @@
 
 """Module for doing system-related operations."""
 
-# pylint: disable=no-member,too-many-arguments,too-many-positional-arguments
+# pylint: disable=invalid-name,too-many-arguments
 
 import logging
 import re

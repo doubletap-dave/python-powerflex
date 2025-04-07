@@ -15,7 +15,7 @@
 
 """Module for interacting with device APIs."""
 
-# pylint: disable=too-few-public-methods,too-many-arguments,too-many-positional-arguments,no-member,duplicate-code
+# pylint: disable=invalid-name,too-many-arguments
 
 import logging
 

@@ -15,7 +15,7 @@
 
 """Module for interacting with snapshot policy APIs."""
 
-# pylint: disable=too-few-public-methods,no-member,too-many-arguments,too-many-positional-arguments,duplicate-code
+# pylint: disable=invalid-name,too-many-arguments
 
 import logging
 

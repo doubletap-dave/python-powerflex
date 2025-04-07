@@ -15,7 +15,7 @@
 
 """Module for interacting with replication consistency group APIs."""
 
-# pylint: disable=too-many-public-methods,no-member,too-many-arguments,too-many-positional-arguments,duplicate-code
+# pylint: disable=invalid-name,too-many-arguments
 
 import logging
 

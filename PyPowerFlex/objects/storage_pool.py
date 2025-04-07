@@ -15,7 +15,7 @@
 
 """Module for interacting with storage pool APIs."""
 
-# pylint: disable=too-few-public-methods,too-many-public-methods,no-member,too-many-arguments,too-many-positional-arguments,too-many-locals,cyclic-import,duplicate-code
+# pylint: disable=invalid-name,too-many-arguments
 
 import logging
 
@@ -23,7 +23,7 @@ import requests
 
 from PyPowerFlex import base_client
 from PyPowerFlex import exceptions
-from PyPowerFlex.objects import Sds
+from .sds import Sds
 
 
 LOG = logging.getLogger(__name__)

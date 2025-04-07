@@ -15,7 +15,7 @@
 
 """Module for interacting with SDT APIs."""
 
-# pylint: disable=too-few-public-methods,no-member,too-many-arguments,too-many-positional-arguments
+# pylint: disable=invalid-name,too-many-arguments
 
 import logging
 import requests

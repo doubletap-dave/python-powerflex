@@ -15,7 +15,7 @@
 
 """Module for doing the deployment."""
 
-# pylint: disable=arguments-renamed,too-many-arguments,too-many-positional-arguments,no-member
+# pylint: disable=invalid-name,too-many-arguments
 
 import logging
 import requests
