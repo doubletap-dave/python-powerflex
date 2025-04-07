@@ -454,8 +454,7 @@ class Volume(base_client.EntityRequest):
         if r.status_code != requests.codes.ok:
             msg = (
                 f"Failed to set the access mode for the SDC {sdc_id} "
-                f"mapped to PowerFlex {self.entity} with id {
-                    volume_id}. Error: "
+                f"mapped to PowerFlex {self.entity} with id {volume_id}. Error: "
                 f"{response}"
             )
             LOG.error(msg)
