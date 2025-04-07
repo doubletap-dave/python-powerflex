@@ -20,6 +20,7 @@
 from PyPowerFlex import exceptions
 from PyPowerFlex.objects import volume
 import tests
+from tests import MockResponse
 
 
 class TestVolumeClient(tests.PyPowerFlexTestCase):
@@ -74,7 +75,8 @@ class TestVolumeClient(tests.PyPowerFlexTestCase):
             self.RESPONSE_MODE.Invalid: {
                 '/types/Volume/instances':
                     {},
-            }
+            },
+            self.RESPONSE_MODE.BadStatus: {}
         }
 
     def test_volume_add_mapped_sdc_id_and_guid_are_set(self):
