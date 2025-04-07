@@ -174,7 +174,3 @@ For detailed examples of each credential type, see the following:
 - [IOM Credential Examples](credential_examples/iom_credential.md)
 - [vCenter Credential Examples](credential_examples/vcenter_credential.md)
 - [EM Credential Examples](credential_examples/em_credential.md)
-- [ScaleIO Credential Examples](credential_examples/scaleio_credential.md)
-- [PS Credential Examples](credential_examples/ps_credential.md)
-- [OS Credential Examples](credential_examples/os_credential.md)
-- [OS User Credential Examples](credential_examples/os_user_credential.md)
