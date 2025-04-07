@@ -4,3 +4,4 @@ flake8==3.7.9
 flake8-copyright==0.2.2
 flake8-import-order==0.18.1
 stestr==2.6.0
+defusedxml>=0.7.1
