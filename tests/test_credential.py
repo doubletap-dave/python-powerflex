@@ -40,7 +40,7 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
         super().setUp()
         
         # Initialize the mock_responses dictionary with the required structure
-        self.mock_responses = {
+        self.MOCK_RESPONSES = {
             self.RESPONSE_MODE.Valid: {},
             self.RESPONSE_MODE.Invalid: {},
             self.RESPONSE_MODE.BadStatus: {}
@@ -52,7 +52,7 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
         self.client.initialize()
 
         # Mock responses for credential API operations
-        self.mock_responses[self.RESPONSE_MODE.Valid].update({
+        self.MOCK_RESPONSES[self.RESPONSE_MODE.Valid].update({
             '/version': '4.0',
             '/Api/V1/Credential': {
                 'credential': {
@@ -94,7 +94,7 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
         """
         # Reset version back to 4.0 after each test
         self.DEFAULT_MOCK_RESPONSES[self.RESPONSE_MODE.Valid]['/version'] = '4.0'
-        self.mock_responses[self.RESPONSE_MODE.Valid]['/version'] = '4.0'
+        self.MOCK_RESPONSES[self.RESPONSE_MODE.Valid]['/version'] = '4.0'
         super().tearDown()
 
     def test_server_credential_to_xml(self):
@@ -151,7 +151,7 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
         # Mock requests.post to properly handle the XML request
         with mock.patch('requests.post') as mock_post:
             mock_post.return_value.status_code = 200
-            mock_post.return_value.json.return_value = self.mock_responses[
+            mock_post.return_value.json.return_value = self.MOCK_RESPONSES[
                 self.RESPONSE_MODE.Valid]['/Api/V1/Credential']
             
             result = self.client.credential.create(cred)

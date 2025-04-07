@@ -58,6 +58,8 @@ class TestVolumeClient(tests.PyPowerFlexTestCase):
                     {},
                 f'/instances/Volume::{self.fake_volume_id}/action/unlockAutoSnapshot':
                     {},
+                f'/instances/Volume::{self.fake_volume_id}/action/migrateVTree':
+                    {'id': self.fake_volume_id},
                 '/types/Volume'
                 '/instances/action/querySelectedStatistics': {
                     self.fake_volume_id: {
