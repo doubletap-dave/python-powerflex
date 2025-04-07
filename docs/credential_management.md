@@ -20,7 +20,7 @@ The PowerFlex Credential Management API supports the following credential types:
 | Server Credential | Used for authenticating to server components | No |
 | IOM Credential | Used for I/O Module authentication | No |
 | vCenter Credential | Used for authenticating to VMware vCenter | Yes |
-| EM Credential | Used for Enterprise Manager authentication | Yes |
+| EM Credential | Used for Element Manager authentication | Yes |
 | ScaleIO Credential | Used for ScaleIO/PowerFlex component authentication | No |
 | PS Credential | Used for PowerScale authentication | Yes |
 | OS Credential | Used for operating system authentication | Yes |
