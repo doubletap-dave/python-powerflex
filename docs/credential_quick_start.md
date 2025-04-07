@@ -4,7 +4,7 @@ This guide provides a quick introduction to using the credential management func
 
 ## Prerequisites
 
-- PyPowerFlex SDK version 1.15.0 or later
+- PyPowerFlex SDK version 1.14.0 or later
 - PowerFlex Gateway version 4.0 or higher
 - Appropriate permissions to manage credentials
 

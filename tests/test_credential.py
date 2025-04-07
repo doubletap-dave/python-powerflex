@@ -15,24 +15,19 @@
 
 """Module for testing PowerFlex credential management."""
 
-import xml.etree.ElementTree as ET
 from unittest import mock
 
 from PyPowerFlex import exceptions
 from PyPowerFlex.objects.credential import (
     BaseCredential,
     ServerCredential,
-    IomCredential,
-    VCenterCredential,
-    EmCredential,
-    ScaleIOCredential,
-    PSCredential,
-    OSCredential,
-    OSUserCredential
+    VCenterCredential
 )
 import tests
 
 
+# pylint: disable=too-many-public-methods
+# This test class needs comprehensive coverage of credential functionality
 class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
     """
     Test class for PowerFlex credential management.
@@ -44,8 +39,8 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
         """
         super().setUp()
         
-        # Initialize the MOCK_RESPONSES dictionary with the required structure
-        self.MOCK_RESPONSES = {
+        # Initialize the mock_responses dictionary with the required structure
+        self.mock_responses = {
             self.RESPONSE_MODE.Valid: {},
             self.RESPONSE_MODE.Invalid: {},
             self.RESPONSE_MODE.BadStatus: {}
@@ -57,7 +52,7 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
         self.client.initialize()
 
         # Mock responses for credential API operations
-        self.MOCK_RESPONSES[self.RESPONSE_MODE.Valid].update({
+        self.mock_responses[self.RESPONSE_MODE.Valid].update({
             '/version': '4.0',
             '/Api/V1/Credential': {
                 'credential': {
@@ -99,7 +94,7 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
         """
         # Reset version back to 4.0 after each test
         self.DEFAULT_MOCK_RESPONSES[self.RESPONSE_MODE.Valid]['/version'] = '4.0'
-        self.MOCK_RESPONSES[self.RESPONSE_MODE.Valid]['/version'] = '4.0'
+        self.mock_responses[self.RESPONSE_MODE.Valid]['/version'] = '4.0'
         super().tearDown()
 
     def test_server_credential_to_xml(self):
@@ -156,7 +151,7 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
         # Mock requests.post to properly handle the XML request
         with mock.patch('requests.post') as mock_post:
             mock_post.return_value.status_code = 200
-            mock_post.return_value.json.return_value = self.MOCK_RESPONSES[
+            mock_post.return_value.json.return_value = self.mock_responses[
                 self.RESPONSE_MODE.Valid]['/Api/V1/Credential']
             
             result = self.client.credential.create(cred)
@@ -169,7 +164,7 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
             self.assertEqual(result['credential']['label'], 'Test Server')
             
             # Verify proper XML was sent
-            args, kwargs = mock_post.call_args
+            _, kwargs = mock_post.call_args
             self.assertIn('data', kwargs)
             xml_data = kwargs['data']
             self.assertIn('<serverCredential>', xml_data)
@@ -248,7 +243,7 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
             self.assertEqual(result['credential']['label'], 'Updated Server')
             
             # Verify proper XML was sent
-            args, kwargs = mock_put.call_args
+            _, kwargs = mock_put.call_args
             self.assertIn('data', kwargs)
             xml_data = kwargs['data']
             self.assertIn('<serverCredential>', xml_data)
@@ -273,8 +268,10 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
             self.assertEqual(result, {})
             
             # Verify the correct URL was called
-            args, kwargs = mock_delete.call_args
-            self.assertIn('https://1.2.3.4:443/api/Api/V1/Credential/d32c5fea-721b-446e-994d-1e0baf921b3a', args)
+            url, _ = mock_delete.call_args
+            base_url = 'https://1.2.3.4:443/api/Api/V1/Credential/'
+            credential_id = 'd32c5fea-721b-446e-994d-1e0baf921b3a'
+            self.assertIn(base_url + credential_id, url)
 
     def test_version_check(self):
         """
@@ -293,7 +290,10 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
                 self.client.credential.create(cred)
             
             # Check for the correct error message
-            expected_msg = "Credential operations are not supported for PowerFlex Gateway version 3.5"
+            expected_msg = (
+                "Credential operations are not supported for PowerFlex Gateway "
+                "version 3.5"
+            )
             self.assertIn(expected_msg, str(context.exception))
 
     def test_invalid_credential_type(self):
@@ -477,5 +477,11 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
                 self.client.credential.create(cred)
                 
             exception_msg = str(context.exception)
-            self.assertIn("not supported for PowerFlex Gateway version 3.0", exception_msg)
-            self.assertIn("versions below 4.0 do not support credential management", exception_msg)
+            self.assertIn(
+                "not supported for PowerFlex Gateway version 3.0",
+                exception_msg
+            )
+            self.assertIn(
+                "versions below 4.0 do not support credential management",
+                exception_msg
+            )
