@@ -24,7 +24,9 @@ disable=
     # Disable too-many-public-methods for API client classes
     too-many-public-methods,
     # Disable too-many-locals for complex API methods
-    too-many-locals
+    too-many-locals,
+    # Disable too-many-positional-arguments for API methods
+    too-many-positional-arguments
 
 [FORMAT]
 # Maximum number of characters on a single line
