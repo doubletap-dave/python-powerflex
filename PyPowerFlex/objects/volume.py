@@ -261,8 +261,7 @@ class Volume(base_client.EntityRequest):
                                              params=params)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to unmap PowerFlex {
-                    self.entity} with id {volume_id} from "
+                f"Failed to unmap PowerFlex {self.entity} with id {volume_id} from "
                 f"SDC. Error: {response}"
             )
             LOG.error(msg)

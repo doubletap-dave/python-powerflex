@@ -267,8 +267,7 @@ class System(base_client.EntityRequest):
         r, response = self.send_get_request('/Configuration')
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to get gateway configuration details on PowerFlex {
-                    self.entity}. "
+                f"Failed to get gateway configuration details on PowerFlex {self.entity}. "
                 f"Error: {response}"
             )
             LOG.error(msg)

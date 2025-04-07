@@ -265,8 +265,7 @@ class StoragePool(base_client.EntityRequest):
                                              params=params)
         if r.status_code != requests.codes.ok:
             msg = (
-                f'Failed to set compression method for PowerFlex {
-                    self.entity} '
+                f'Failed to set compression method for PowerFlex {self.entity} '
                 f'with id {storage_pool_id}. Error: {response}')
             LOG.error(msg)
             raise exceptions.PowerFlexClientException(msg)

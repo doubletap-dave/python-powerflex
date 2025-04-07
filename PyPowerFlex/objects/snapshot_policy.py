@@ -153,8 +153,7 @@ class SnapshotPolicy(base_client.EntityRequest):
                                              entity_id=snapshot_policy_id)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to pause PowerFlex {
-                    self.entity} with id {snapshot_policy_id}. "
+                f"Failed to pause PowerFlex {self.entity} with id {snapshot_policy_id}. "
                 f"Error: {response}"
             )
             LOG.error(msg)
@@ -233,8 +232,7 @@ class SnapshotPolicy(base_client.EntityRequest):
                                              entity_id=snapshot_policy_id)
         if r.status_code != requests.codes.ok:
             msg = (
-                f"Failed to resume PowerFlex {
-                    self.entity} with id {snapshot_policy_id}. "
+                f"Failed to resume PowerFlex {self.entity} with id {snapshot_policy_id}. "
                 f"Error: {response}"
             )
             LOG.error(msg)
