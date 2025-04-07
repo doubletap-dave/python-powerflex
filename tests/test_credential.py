@@ -43,6 +43,17 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
         Set up the test case.
         """
         super().setUp()
+        
+        # Initialize the MOCK_RESPONSES dictionary with the required structure
+        self.MOCK_RESPONSES = {
+            self.RESPONSE_MODE.Valid: {},
+            self.RESPONSE_MODE.Invalid: {},
+            self.RESPONSE_MODE.BadStatus: {}
+        }
+        
+        # Set version to 4.0 before initializing client
+        self.DEFAULT_MOCK_RESPONSES[self.RESPONSE_MODE.Valid]['/version'] = '4.0'
+        
         self.client.initialize()
 
         # Mock responses for credential API operations
@@ -81,6 +92,15 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
                 }
             }
         })
+
+    def tearDown(self):
+        """
+        Clean up after each test.
+        """
+        # Reset version back to 4.0 after each test
+        self.DEFAULT_MOCK_RESPONSES[self.RESPONSE_MODE.Valid]['/version'] = '4.0'
+        self.MOCK_RESPONSES[self.RESPONSE_MODE.Valid]['/version'] = '4.0'
+        super().tearDown()
 
     def test_server_credential_to_xml(self):
         """
@@ -240,37 +260,41 @@ class TestPowerFlexCredential(tests.PyPowerFlexTestCase):
         """
         Test deleting a credential.
         """
-        # Update MOCK_RESPONSES for delete endpoint
-        self.MOCK_RESPONSES[self.RESPONSE_MODE.Valid].update({
-            '/types/Credential/instances/d32c5fea-721b-446e-994d-1e0baf921b3a': {}
-        })
-        
-        result = self.client.credential.delete(
-            'd32c5fea-721b-446e-994d-1e0baf921b3a'
-        )
-        
-        # Check result (delete returns empty dict)
-        self.assertEqual(result, {})
+        # Mock requests.delete to properly handle the request
+        with mock.patch('requests.delete') as mock_delete:
+            mock_delete.return_value.status_code = 200
+            mock_delete.return_value.json.return_value = {}
+            
+            result = self.client.credential.delete(
+                'd32c5fea-721b-446e-994d-1e0baf921b3a'
+            )
+            
+            # Check result (delete returns empty dict)
+            self.assertEqual(result, {})
+            
+            # Verify the correct URL was called
+            args, kwargs = mock_delete.call_args
+            self.assertIn('https://1.2.3.4:443/api/Api/V1/Credential/d32c5fea-721b-446e-994d-1e0baf921b3a', args)
 
     def test_version_check(self):
         """
         Test that credential operations check gateway version compatibility.
         """
-        # Change version to 3.5 (below required 4.0)
-        self.MOCK_RESPONSES[self.RESPONSE_MODE.Valid]['/version'] = '3.5'
-        
-        cred = ServerCredential(
-            label="Test Server",
-            username="admin",
-            password="password123"
-        )
-        
-        # Check that operations raise version exception
-        with self.assertRaises(exceptions.PowerFlexClientException) as context:
-            self.client.credential.create(cred)
+        # Mock the system.api_version to return 3.5
+        with mock.patch.object(self.client.system, 'api_version', return_value='3.5'):
+            cred = ServerCredential(
+                label="Test Server",
+                username="admin",
+                password="password123"
+            )
             
-        self.assertIn("Credential management requires PowerFlex Gateway", 
-                     str(context.exception))
+            # Check that operations raise version exception
+            with self.assertRaises(exceptions.PowerFlexCredentialNotSupported) as context:
+                self.client.credential.create(cred)
+            
+            # Check for the correct error message
+            expected_msg = "Credential operations are not supported for PowerFlex Gateway version 3.5"
+            self.assertIn(expected_msg, str(context.exception))
 
     def test_invalid_credential_type(self):
         """

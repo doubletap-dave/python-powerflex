@@ -90,7 +90,10 @@ class PowerFlexClient:
         return super().__getattribute__(item)
 
     def __add_storage_entity(self, attr_name, entity_class):
-        setattr(self, attr_name, entity_class(self.token, self.configuration))
+        if attr_name == 'credential':
+            setattr(self, attr_name, entity_class(self.token, self.configuration, self))
+        else:
+            setattr(self, attr_name, entity_class(self.token, self.configuration))
 
     def initialize(self):
         """

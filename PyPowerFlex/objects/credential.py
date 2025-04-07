@@ -128,8 +128,25 @@ class BaseCredential:
         
         # Check if this credential type supports domains
         domain_supported = False
+        
+        # Map credential classes to their credential_type values without instantiating
+        credential_type_map = {
+            ServerCredential: CredentialConstants.SERVER_CREDENTIAL,
+            IomCredential: CredentialConstants.IOM_CREDENTIAL,
+            VCenterCredential: CredentialConstants.VCENTER_CREDENTIAL,
+            EmCredential: CredentialConstants.EM_CREDENTIAL,
+            ScaleIOCredential: CredentialConstants.SCALEIO_CREDENTIAL,
+            PSCredential: CredentialConstants.PS_CREDENTIAL,
+            OSCredential: CredentialConstants.OS_CREDENTIAL,
+            OSUserCredential: CredentialConstants.OS_USER_CREDENTIAL
+        }
+        
+        # Get the credential type string for the selected class
+        class_credential_type = credential_type_map.get(credential_class)
+        
+        # Check if this credential type supports domains
         for supported_type in CredentialConstants.DOMAIN_SUPPORTED_TYPES:
-            if supported_type.lower() == credential_class().credential_type.lower():
+            if supported_type.lower() == class_credential_type.lower():
                 domain_supported = True
                 break
         
@@ -296,17 +313,20 @@ class Credential(base_client.EntityRequest):
         """Return the entity name for this object."""
         return 'Credential'
     
-    def __init__(self, token, configuration):
+    def __init__(self, token, configuration, client=None):
         """Initialize a Credential client.
         
         :param token: The authentication token
         :type token: Token
         :param configuration: The client configuration
         :type configuration: Configuration
+        :param client: The PowerFlex client instance
+        :type client: PowerFlexClient
         """
         super().__init__(token, configuration)
         self._entity = 'Credential'
-        self.base_url = f"{self.base_url}/Api/V1"
+        self._api_version_path = "/Api/V1"
+        self.client = client
         
     def create(self, credential):
         """Create PowerFlex credential.
@@ -348,6 +368,7 @@ class Credential(base_client.EntityRequest):
         headers = self.get_auth_headers()
         headers['content-type'] = CredentialConstants.XML_CONTENT_TYPE
         
+        # Construct the full URL without duplicating the API version path
         request_url = f"{self.base_url}{url}"
         version = self.login()
         
@@ -412,6 +433,7 @@ class Credential(base_client.EntityRequest):
         if fields:
             params['fields'] = ','.join(fields)
             
+        # Use the URL directly without adding the API version path again
         r, response = self.send_get_request(url, params)
         if r.status_code != requests.codes.ok:
             msg = f"Failed to get PowerFlex credentials. Error: {response}"
@@ -462,6 +484,7 @@ class Credential(base_client.EntityRequest):
         headers = self.get_auth_headers()
         headers['content-type'] = CredentialConstants.XML_CONTENT_TYPE
         
+        # Construct the full URL without duplicating the API version path
         request_url = f"{self.base_url}{url}"
         version = self.login()
         
@@ -502,21 +525,65 @@ class Credential(base_client.EntityRequest):
         
         :param credential_id: ID of credential to delete
         :type credential_id: str
-        :rtype: None
+        :rtype: dict
         """
         # Check if gateway version supports credentials
         self._check_gateway_version()
         
-        return self._delete_entity(credential_id)
+        url = f"{CredentialConstants.BASE_CREDENTIAL_URL}/{credential_id}"
+        headers = self.get_auth_headers()
+        
+        # Construct the full URL without duplicating the API version path
+        request_url = f"{self.base_url}{url}"
+        version = self.login()
+        
+        try:
+            response = requests.delete(request_url, headers=headers)
+            self.logout(version)
+            
+            if response.status_code != requests.codes.ok:
+                try:
+                    error_response = response.json()
+                except ValueError:
+                    error_response = response.text
+                    
+                msg = f"Failed to delete PowerFlex credential with id {credential_id}. Error: {error_response}"
+                LOG.error(msg)
+                raise exceptions.PowerFlexFailCredentialOperation(credential_id, "delete", error_response)
+                
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            msg = f"Connection error deleting credential: {str(e)}"
+            LOG.error(msg)
+            raise exceptions.PowerFlexFailCredentialOperation(credential_id, "delete", str(e))
 
     def _check_gateway_version(self):
         """Check if the PowerFlex Gateway version supports credential management.
         
         :raises: PowerFlexCredentialNotSupported if version is not supported
         """
-        version = self.system.api_version()
-        if version < CredentialConstants.MIN_GATEWAY_VERSION_FOR_CREDENTIALS:
-            raise exceptions.PowerFlexCredentialNotSupported(gateway_version=version)
+        try:
+            # Get the API version from the system object
+            if self.client and hasattr(self.client, 'system'):
+                version = self.client.system.api_version()
+            else:
+                # Fallback to creating a new System instance if client is not available
+                from PyPowerFlex.objects import system
+                sys_client = system.System(self.token, self.configuration)
+                version = sys_client.api_version()
+            
+            # Check if version is high enough to support credentials (4.0 or higher)
+            major_version = version.split('.')[0]
+            if int(major_version) < 4:
+                msg = f"Credential management requires PowerFlex Gateway version 4.0 or higher. Current version: {version}"
+                LOG.error(msg)
+                raise exceptions.PowerFlexCredentialNotSupported(version)
+        except Exception as e:
+            if isinstance(e, exceptions.PowerFlexCredentialNotSupported):
+                raise
+            msg = f"Error checking PowerFlex Gateway version: {str(e)}"
+            LOG.error(msg)
+            raise exceptions.PowerFlexClientException(msg)
 
     def get_credential_type(self, credential_data):
         """Extract the credential type from a credential API response.
